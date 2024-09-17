@@ -1,66 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Laravel Docker Setup
 
-## About Laravel
+This project is a Laravel application using Docker for the development environment. The Docker setup includes a PHP service to run Composer, Artisan commands, and a server for running the Laravel application.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Prerequisites
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Make sure you have the following installed on your system:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Learning Laravel
+## Getting Started
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Follow these steps to get the Laravel application up and running using Docker Compose.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Clone the Repository
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Clone the project repository (if applicable) or create a new directory for the Laravel project:
 
-## Laravel Sponsors
+```bash
+git clone <repository_url>
+cd <project_directory>
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 2. Create Laravel Project
 
-### Premium Partners
+Run the following Docker Compose command to create a new Laravel project inside the current directory:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+docker-compose run --rm composer create-project laravel/laravel .
+```
 
-## Contributing
+This will use the `composer` service to create a new Laravel project in the current directory.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Build and Start the Containers
 
-## Code of Conduct
+After creating the Laravel project, build and start the Docker containers:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+docker-compose up -d --build server
+```
 
-## Security Vulnerabilities
+This will build the Docker images and start the `server` container in detached mode.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Run Database Migrations
+
+To set up the database and run fresh migrations, execute the following command:
+
+```bash
+docker-compose run --rm artisan migrate:fresh
+```
+
+This command uses the `artisan` service to run the migrations.
+
+### 5. Access the Application
+
+Once the server is up and running, you can access the Laravel application in your browser:
+
+```
+http://localhost:8081
+```
+
+If you've customized the port in your `docker-compose.yml`, use that port instead.
+
+## Docker Services
+
+The Docker Compose configuration includes the following services:
+
+- **composer**: Used to run Composer commands.
+- **artisan**: Used to run Laravel Artisan commands.
+- **server**: The main server that runs the Laravel application.
+
+## Common Commands
+
+### Stop the Containers
+
+To stop the running containers:
+
+```bash
+docker-compose down
+```
+
+### Rebuild Containers
+
+To rebuild the containers (for example, after updating dependencies or modifying the Dockerfile):
+
+```bash
+docker-compose up -d --build
+```
+
+### Run Other Artisan Commands
+
+You can run any Artisan command via Docker Compose, for example:
+
+```bash
+docker-compose run --rm artisan make:migration create_users_table
+```
+
+## Troubleshooting
+
+If you run into issues, here are a few steps you can try:
+
+- Ensure Docker and Docker Compose are running correctly.
+- Check your `.env` file for database connection settings.
+- Verify that the Docker containers are running using `docker ps`.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
